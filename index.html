@@ -289,7 +289,15 @@
       if (d < 140) moveNo(e.clientX, e.clientY);
     });
 
-    noBtn.addEventListener("click", e => e.preventDefault());
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Get click position
+      const clickX = e.clientX;
+      const clickY = e.clientY;
+
+      moveNo(clickX, clickY);
+    });
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
