@@ -203,6 +203,10 @@
     /* ---------- CONFETTI ---------- */
     const confettiCanvas = document.getElementById("confettiCanvas");
 
+    // Detect mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     (window.innerWidth <= 768 && 'ontouchstart' in window);
+
     function resizeConfettiCanvas() {
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       confettiCanvas.width = Math.floor(window.innerWidth * dpr);
@@ -215,17 +219,22 @@
     window.addEventListener("resize", resizeConfettiCanvas);
     window.addEventListener("orientationchange", () => setTimeout(resizeConfettiCanvas, 150));
 
+    // Disable worker on mobile devices for better compatibility
     const confettiInstance = confetti.create(confettiCanvas, {
       resize: false,
-      useWorker: true
+      useWorker: !isMobile
     });
 
     function fullScreenConfetti() {
+      // Adjust particle count for mobile to improve performance
+      const particleCount = isMobile ? 8 : 12;
+      const mainParticleCount = isMobile ? 200 : 300;
+      
       const end = Date.now() + 1600;
 
       (function frame() {
         confettiInstance({
-          particleCount: 12,
+          particleCount: particleCount,
           spread: 90,
           startVelocity: 45,
           ticks: 180,
@@ -236,7 +245,7 @@
 
       setTimeout(() => {
         confettiInstance({
-          particleCount: 300,
+          particleCount: mainParticleCount,
           spread: 140,
           startVelocity: 60,
           ticks: 220,
@@ -300,16 +309,20 @@
     });
 
     /* ---------- YES CLICK ---------- */
-    yesBtn.addEventListener("click", () => {
+    function handleYesClick() {
       zone.style.display = "none";
       hint.style.display = "none";     // HIDE THE HINT
       result.style.display = "block";
       resizeConfettiCanvas();
       fullScreenConfetti();
+    }
+    
+    yesBtn.addEventListener("click", handleYesClick);
+    // Ensure touch events work on mobile
+    yesBtn.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      handleYesClick();
     });
   </script>
 </body>
 </html>
-
-
-
