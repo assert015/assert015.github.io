@@ -229,6 +229,8 @@
       // Adjust particle count for mobile to improve performance
       const particleCount = isMobile ? 8 : 12;
       const mainParticleCount = isMobile ? 200 : 300;
+      // Make particles bigger on mobile
+      const particleSize = isMobile ? 2.5 : 1;
       
       const end = Date.now() + 1600;
 
@@ -238,6 +240,7 @@
           spread: 90,
           startVelocity: 45,
           ticks: 180,
+          scalar: particleSize,
           origin: { x: Math.random(), y: Math.random() * 0.3 }
         });
         if (Date.now() < end) requestAnimationFrame(frame);
@@ -249,6 +252,7 @@
           spread: 140,
           startVelocity: 60,
           ticks: 220,
+          scalar: particleSize,
           origin: { x: 0.5, y: 0.55 }
         });
       }, 300);
